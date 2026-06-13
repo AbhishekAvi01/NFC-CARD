@@ -1,50 +1,42 @@
 import React, { useState } from 'react';
-import { X, Eye, Maximize2 } from 'lucide-react';
+import { mockProfileData } from '../mockData';
+import { X, Maximize2 } from 'lucide-react';
 
-export default function MediaGallery({ galleryItems }) {
-  const [currentFilter, setCurrentFilter] = useState('All');
-  const [activePreview, setActivePreview] = useState(null);
-  
-  const [isShowingAll, setIsShowingAll] = useState(false);
+export default function MediaGallery() {
+  const { gallery } = mockProfileData;
+  const [activeTab, setActiveTab] = useState('All');
+  const [activeLightbox, setActiveLightbox] = useState(null);
 
-  const filterTabs = ['All', 'Photos', 'Videos', 'Certificates'];
+  const filterTabs = ['All', 'Photos', 'Videos', 'Certificates', 'Documents'];
 
-  const filteredItems = currentFilter === 'All' 
-    ? galleryItems 
-    : galleryItems.filter(item => item.type === currentFilter);
-
-  const displayedItems = isShowingAll ? filteredItems : filteredItems.slice(0, 4);
+  const filteredItems = activeTab === 'All' 
+    ? gallery 
+    : gallery.filter(item => item.type.toLowerCase() === activeTab.toLowerCase());
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-4 px-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
-          <h3 className="text-base font-bold text-slate-800 tracking-tight">Media Gallery</h3>
-          <p className="text-[11px] text-slate-400 font-medium -mt-0.5">Photos, Videos, Works, Certificates</p>
+          <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-200 tracking-tight">
+            Media Gallery
+          </h3>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-bold mt-0.5">
+            Photos, Videos, Works, Certificates
+          </p>
         </div>
-    
-        <button 
-          onClick={() => setIsShowingAll(!isShowingAll)}
-          className="text-xs font-bold text-blue-600 hover:text-blue-700 transition cursor-pointer bg-blue-50 px-3 py-1.5 rounded-xl hover:bg-blue-100"
-        >
-          {isShowingAll ? 'Show Less' : 'View All'}
-        </button>
+        <span className="text-xs font-bold text-blue-600 dark:text-blue-400 cursor-pointer hover:underline self-end sm:self-auto">View All</span>
       </div>
 
     
-      <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-none">
-        {filterTabs.map((tab) => (
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none border-b border-slate-100 dark:border-slate-800 mb-4">
+        {filterTabs.map((tab, i) => (
           <button
-            key={tab}
-            onClick={() => {
-              setCurrentFilter(tab);
-            
-              setIsShowingAll(false); 
-            }}
-            className={`text-xs px-4 py-1.5 rounded-full font-bold transition-all duration-150 whitespace-nowrap cursor-pointer ${
-              currentFilter === tab
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-slate-50 text-slate-500 border border-slate-100 hover:border-slate-200'
+            key={i}
+            onClick={() => setActiveTab(tab)}
+            className={`text-[10px] font-black uppercase tracking-wider px-3.5 py-1.5 rounded-xl transition whitespace-nowrap cursor-pointer ${
+              activeTab === tab 
+                ? 'bg-blue-600 text-white shadow-md shadow-blue-500/10' 
+                : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
             {tab}
@@ -53,73 +45,47 @@ export default function MediaGallery({ galleryItems }) {
       </div>
 
     
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 transition-all">
-        {displayedItems.map((image, index) => (
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {filteredItems.map((item, idx) => (
           <div 
-            key={index} 
-            onClick={() => setActivePreview(image.src)}
-            className="relative aspect-square rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 group cursor-pointer active:scale-95 transition-all duration-200 shadow-sm animate-fade-in"
+            key={idx}
+            onClick={() => setActiveLightbox(item.src)}
+            className="group relative aspect-video rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 shadow-xs cursor-pointer"
           >
             <img 
-              src={image.src} 
-              alt="Gallery thumbnail" 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              src={item.src} 
+              alt={item.type} 
+              className="w-full h-full object-cover group-hover:scale-105 transition duration-300" 
             />
             
-            <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
-              <Eye size={14} className="text-white" />
-              <span className="text-[10px] text-white font-bold tracking-wider uppercase">Expand</span>
+          
+            <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition duration-150 flex items-center justify-center">
+              <div className="bg-white/90 p-2 rounded-xl backdrop-blur-xs text-slate-800 shadow-xl transform scale-90 group-hover:scale-100 transition duration-200">
+                <Maximize2 size={14} />
+              </div>
             </div>
             
-        
-            {index === 3 && !isShowingAll && filteredItems.length > 4 && (
-              <div 
-                onClick={(e) => {
-                  e.stopPropagation(); 
-                  setIsShowingAll(true);
-                }}
-                className="absolute inset-0 bg-slate-900/70 backdrop-blur-[1.5px] flex items-center justify-center hover:bg-slate-950/80 transition-colors"
-              >
-                <span className="text-white text-xs font-black tracking-wide uppercase text-center px-1">
-                  +{filteredItems.length - 3} More
-                </span>
-              </div>
-            )}
+            <span className="absolute bottom-2 left-2 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 bg-slate-900/70 text-white backdrop-blur-xs rounded-md">
+              {item.type}
+            </span>
           </div>
         ))}
       </div>
 
-      {filteredItems.length === 0 && (
-        <div className="text-center py-8 bg-slate-50 border border-dashed border-slate-200 rounded-2xl">
-          <span className="text-xs font-semibold text-slate-400 block">No files inside {currentFilter} category</span>
-        </div>
-      )}
-
       
-      {activePreview && (
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-xl flex flex-col justify-between z-50 p-6 animate-fade-in">
-          <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-              <Maximize2 size={12} /> High Resolution Image Preview
-            </span>
-            <button 
-              onClick={() => setActivePreview(null)}
-              className="p-2.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition cursor-pointer"
-            >
-              <X size={16} strokeWidth={2.5} />
-            </button>
-          </div>
-          <div className="flex-1 flex items-center justify-center my-6 overflow-hidden">
-            <img src={activePreview} alt="Expanded High Res" className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-white/5 animate-scale-up" />
-          </div>
-          <div className="w-full text-center pb-2">
-            <button 
-              onClick={() => setActivePreview(null)}
-              className="text-xs font-bold text-slate-400 hover:text-white uppercase tracking-widest"
-            >
-              ← Dismiss Inspector Frame
-            </button>
-          </div>
+      {activeLightbox && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+          <button 
+            onClick={() => setActiveLightbox(null)}
+            className="absolute top-5 right-5 text-white bg-slate-900/60 p-2.5 rounded-full border border-white/10 hover:bg-slate-800 transition cursor-pointer"
+          >
+            <X size={18} />
+          </button>
+          <img 
+            src={activeLightbox} 
+            alt="Enlarged Inspector Preview" 
+            className="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain border border-white/5 animate-scale-up" 
+          />
         </div>
       )}
     </div>

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Human layout utility to hide native scrollbar tracks inside horizontal galleries */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
