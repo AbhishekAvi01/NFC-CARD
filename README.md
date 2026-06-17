@@ -29,19 +29,17 @@ Modular Payload System: Dynamic data maps with deep structural asset integration
 
 
 ## Project Directory Layout
-src/
-├── App.jsx                  # Root Layout Container & Device Context Squeezer Engine
-├── mockData.js              # Centralized Profile Payload Model & Assets Matrix
+    src/
+├── App.jsx                 # Root Container & Device Context Squeezer Engine
+├── mockData.js             # Centralized Profile Payload & Assets Matrix
 └── components/
-    ├── Navbar.jsx           # Global Navigation & Layout Simulation Switcher Triggers
-    ├── ProfileCard.jsx      # Left-Sidebar Side-Aligned Profile Banner & Quick Actions
-    ├── Services.jsx         # Core Solutions and Dynamic Core Feature Grid Array
-    ├── MediaGallery.jsx     # Production Work Showcase & Media Pipeline
-    ├── FeedbackSection.jsx  # Client Endorsement Metric Trackers
-    ├── MicroDetails.jsx     # Technical Specifications & Micro-Level Highlights
-    └── Footer.jsx           # Connected Call To Action Module & Inline Custom Social Matrix
-
-    
+    ├── Navbar.jsx          # Global Navigation, Workspace Controls & Theme/Device Switcher
+    ├── ProfileCard.jsx     # Side-Aligned Profile Banner & Quick Actions
+    ├── Services.jsx        # Core Solutions & Dynamic Feature Grid
+    ├── MediaGallery.jsx    # Production Showcase Pipeline
+    ├── FeedbackSection.jsx # Client Endorsement Metric Trackers
+    ├── ActionModal.jsx     # Secure Action Handling (Report/Block)
+    └── Footer.jsx          # Call-To-Action Module & Social Matrix
 
 
 
